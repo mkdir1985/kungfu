@@ -222,7 +222,8 @@ class KungfuCoreConan(ConanFile):
         parallel_opt = (
             []
             if tools.detected_os() == "Windows"
-            else ["--", "-j", f"{os.cpu_count()}"]
+            #else ["--", "-j", f"{os.cpu_count()}"]
+            else ["--", "-j", f"{1}"]
         )
         self.__enable_modules(runtime)
         if str(self.options.with_yarn) == "True":
@@ -239,7 +240,7 @@ class KungfuCoreConan(ConanFile):
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DSPDLOG_LOG_LEVEL_COMPILE=trace",
             )
-            self.__run_cmake("--build", ".", "--config", "Release", *parallel_opt)
+            self.__run_cmake("--build", ".", "--config", "Debug", *parallel_opt)
 
     def __run_cmake(self, *args):
         rc = subprocess.Popen([tools.which("cmake"), *args]).wait()
@@ -274,7 +275,7 @@ class KungfuCoreConan(ConanFile):
         }
         log_level = spdlog_levels[str(self.options.log_level)]
 
-        parallel_level = os.cpu_count()
+        parallel_level = 1#os.cpu_count()
 
         python_path = (
             subprocess.Popen(["pipenv", "--py"], stdout=subprocess.PIPE)
